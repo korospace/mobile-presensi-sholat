@@ -1,0 +1,7 @@
+{
+  "name": "mobile-presensi-sholat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
