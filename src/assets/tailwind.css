@@ -1,0 +1,10 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.floating_label input:focus-within ~ span,
+.floating_label input:not(:placeholder-shown) ~ span {
+  @apply  -top-6 left-0.5 text-neutral-600 transform text-xs;
+}
