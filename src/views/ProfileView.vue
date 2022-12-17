@@ -9,12 +9,12 @@
           class="min-h-max max-h-full flex flex-col px-6 items-center overflow-auto">
 
             <!-- img profile -->
-            <div 
+            <!-- <div 
               class="w-24 h-24 mt-12 bg-white rounded-full overflow-hidden shadow-md shadow-neutral-700/30">
                 <img 
                   src="../assets/images/profile.webp" alt="profile" 
                   class="w-full h-full">
-            </div>
+            </div> -->
 
             <!-- nama lengkap -->
             <div
@@ -52,6 +52,18 @@
                 <font-awesome-icon class="text-2xl xs:text-3xl" :icon="faAngleRight"/>
             </router-link>
 
+            <!-- link change password -->
+            <router-link 
+              to="/regionsetting" 
+              class="flex justify-between items-center w-full mt-8 py-4 pl-2 pr-4 text-neutral-700/90 border-b border-neutral-400">
+                <div 
+                  class="flex items-center">
+                    <font-awesome-icon class="text-xl xs:text-3xl" :icon="faMap"/>
+                    <div class="ml-5 text-xl xs:text-2xl">wilayah</div>
+                </div>
+                <font-awesome-icon class="text-2xl xs:text-3xl" :icon="faAngleRight"/>
+            </router-link>
+
             <!-- logout -->
             <div 
               @click="doLogout" 
@@ -70,7 +82,7 @@
 </template>
 
 <script>
-import { faAngleRight,faKey,faSignOut } from '@fortawesome/free-solid-svg-icons'
+import { faAngleRight,faKey,faSignOut, faMap } from '@fortawesome/free-solid-svg-icons'
 import { removeLocalStorage }        from '@/services/localstorage.service';
 import { computed, defineComponent } from 'vue';
 import { FontAwesomeIcon }           from '@fortawesome/vue-fontawesome'
@@ -113,6 +125,13 @@ export default defineComponent({
           Swal.close()
 
           if (result.isConfirmed) {
+              store.commit("presensiapi/SET_PRIVILEGE",null);
+              store.commit("presensiapi/SET_SUBUH",{});
+              store.commit("presensiapi/SET_DZUHUR",{});
+              store.commit("presensiapi/SET_ASHAR",{});
+              store.commit("presensiapi/SET_MAGRIB",{});
+              store.commit("presensiapi/SET_ISYA",{});
+
               removeLocalStorage('userdata');
               route.push('/');
           } 
@@ -120,7 +139,7 @@ export default defineComponent({
     }
 
     return {
-      faAngleRight,faKey,faSignOut,
+      faAngleRight,faKey,faSignOut,faMap,
       profile,
       doLogout,
     }

@@ -76,6 +76,16 @@ const loginCheck = async (to: any, from: any, next: any) => {
     
 }
 
+const regionCheck = async (to: any, from: any, next: any) => {
+
+    if (getLocalStorage("userregion") == null) {
+        next({path: '/regionsetting'});
+    }
+
+    next();
+    
+}
+
 const authorizationCheck = async (to: any, from: any, next: any) => {
     const userData = getLocalStorage("userdata");
     const privilege= userData.privilege;
@@ -88,4 +98,4 @@ const authorizationCheck = async (to: any, from: any, next: any) => {
     
 }
 
-export { authCheck,loginCheck,authorizationCheck };
+export { authCheck,loginCheck,regionCheck };
