@@ -5,7 +5,7 @@
       class="min-h-screen max-h-screen w-full bg-neutral-200">
         
         <!-- Container Max-Width -->
-        <div class="min-h-screen max-h-screen w-full max-w-md flex flex-col px-6 m-auto overflow-hidden">
+        <div class="min-h-screen max-h-screen w-full max-w-lg flex flex-col px-6 m-auto overflow-hidden">
 
             <div 
               class="relative flex justify-center items-center w-full pt-6 text-neutral-700/90">

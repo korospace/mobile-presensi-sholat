@@ -5,7 +5,7 @@
       class="min-h-screen max-h-screen w-full bg-neutral-200">
         
         <!-- Container Max-Width -->
-        <div class="min-h-screen max-h-screen w-full max-w-md flex flex-col m-auto bg-white overflow-hidden">
+        <div class="min-h-screen max-h-screen w-full max-w-lg flex flex-col m-auto bg-white overflow-hidden">
         
             <!-- head -->
             <header
@@ -67,7 +67,7 @@
                       @keyup="clearError"
                       type="text" name="username" id="username" placeholder="username" autocomplete="off"
                       :class="{'border-red-500':errorCredential==true,' border-neutral-500':errorCredential==false}"
-                      class="w-full relative z-10 px-4 py-3 bg-transparent focus:outline-none placeholder-transparent border rounded">
+                      class="w-full relative z-10 px-4 py-3 bg-transparent text-neutral-900/80 focus:outline-none placeholder-transparent border rounded">
                     <span
                       class="absolute -z-0 top-3 left-4 text-md text-neutral-500 duration-300">
                         Nomor Induk Siswa</span>
@@ -80,7 +80,7 @@
                       @keyup="clearError"
                       type="password" name="password" id="password" placeholder="password"
                       :class="{'border-red-500':errorCredential==true,' border-neutral-500':errorCredential==false}"
-                      class="w-full relative z-10 px-4 py-3 bg-transparent focus:outline-none placeholder-transparent border rounded">
+                      class="w-full relative z-10 px-4 py-3 bg-transparent text-neutral-900/80 focus:outline-none placeholder-transparent border rounded">
                     <span
                       class="absolute -z-0 top-3 left-4 text-md text-neutral-500 duration-300">
                         Password</span>

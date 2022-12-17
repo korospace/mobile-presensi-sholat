@@ -2,12 +2,12 @@
     <!-- Container -->
     <section
       id="container_profile"
-      class="w-full flex-1 flex flex-col overflow-hidden">
+      class="min-h-screen max-h-screen w-full bg-neutral-200 overflow-hidden">
         
         <!-- container scrolling -->
         <form
           @submit.prevent="updateProfile"
-          class="min-h-max max-h-full flex flex-col px-6 items-center overflow-auto">
+          class="min-h-screen max-h-screen w-full max-w-lg flex flex-col m-auto px-6 items-center overflow-auto">
 
             <!-- back to profile -->
             <router-link 
@@ -24,7 +24,7 @@
                   @keyup="clearOldPassError"
                   type="password" autocomplete="off" name="old_password" placeholder="Password Lama"
                   :class="{'border-red-500':oldPasswordError,'border-neutral-500':oldPasswordError==null}"
-                  class="w-full relative z-10 px-4 py-4 text-xl xs:text-2xl text-neutral-700 bg-transparent focus:outline-none placeholder-transparent border rounded">
+                  class="w-full relative z-10 px-4 py-4 text-xl xs:text-2xl text-neutral-900/80 bg-transparent focus:outline-none placeholder-transparent border rounded">
                 <span
                   class="absolute -z-0 top-5 left-4 text-md text-neutral-500 duration-300">
                     Password Lama</span>
@@ -40,7 +40,7 @@
                   @keyup="clearPassError"
                   type="password" autocomplete="off" name="password" placeholder="Password Baru"
                   :class="{'border-red-500':passwordError,'border-neutral-500':passwordError==null}"
-                  class="w-full relative z-10 px-4 py-4 text-xl xs:text-2xl text-neutral-700 bg-transparent focus:outline-none placeholder-transparent border rounded">
+                  class="w-full relative z-10 px-4 py-4 text-xl xs:text-2xl text-neutral-900/80 bg-transparent focus:outline-none placeholder-transparent border rounded">
                 <span
                   class="absolute -z-0 top-5 left-4 text-md text-neutral-500 duration-300">
                     Password Baru</span>

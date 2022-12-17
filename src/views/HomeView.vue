@@ -5,7 +5,7 @@
       class="min-h-screen max-h-screen w-full bg-neutral-200 overflow-hidden">
         
         <!-- Container Max-Width -->
-        <div class="min-h-screen max-h-screen w-full max-w-md flex flex-col m-auto overflow-hidden">
+        <div class="min-h-screen max-h-screen w-full max-w-lg flex flex-col m-auto overflow-hidden">
         
             <router-view/>
 
