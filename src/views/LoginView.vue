@@ -134,6 +134,8 @@ export default defineComponent({
 
     // vuex action
     const doLogin = (event) => {
+
+      clearError();
       
       const formLogin = new FormData(event.target); 
       
