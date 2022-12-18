@@ -86,16 +86,16 @@ const regionCheck = async (to: any, from: any, next: any) => {
     
 }
 
-const authorizationCheck = async (to: any, from: any, next: any) => {
-    const userData = getLocalStorage("userdata");
-    const privilege= userData.privilege;
+// const authorizationCheck = async (to: any, from: any, next: any) => {
+//     const userData = getLocalStorage("userdata");
+//     const privilege= userData.privilege;
 
-    if(['admin','teacher','student','kelas'].includes(to.name) && privilege != 'admin') { 
-        next({ path: '/' });
-    } 
+//     if(['admin','teacher','student','kelas'].includes(to.name) && privilege != 'admin') { 
+//         next({ path: '/' });
+//     } 
 
-    next();
+//     next();
     
-}
+// }
 
 export { authCheck,loginCheck,regionCheck };

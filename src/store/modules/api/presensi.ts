@@ -1,4 +1,5 @@
 import { getLocalStorage, removeLocalStorage } from "@/services/localstorage.service";
+import { LocalNotifications } from '@capacitor/local-notifications'
 import axios     from 'axios';
 import router    from "@/router";
 import { toast } from 'vue3-toastify';
@@ -67,6 +68,7 @@ export default {
                 isya  : "_ _:_ _",
                 date  : "_ _:_ _",
             });
+
             const userregion      = getLocalStorage("userregion");
             const currentUnixTime = new Date(new Date().getTime());
             const currentDay   = currentUnixTime.toLocaleString("en-US",{day: "2-digit"});
@@ -75,10 +77,58 @@ export default {
 
             axios
                 .get(`https://api.myquran.com/v1/sholat/jadwal/${userregion.id}/${currentYear}/${currentMonth}/${currentDay}`)
-                .then(( res ) => {
+                .then(async ( res ) => {
                     const jadwal = res.data.data.jadwal;
                     
                     commit("SET_JADWAL",jadwal);
+                    LocalNotifications.removeAllListeners();
+
+                    let i = 1;
+                    const notificationsArray = [];
+
+                    for (const key in jadwal) {
+
+                        if (['subuh','dzuhur','ashar','maghrib','isya'].includes(key)) {
+                            const arrayTime = jadwal[key].split(':');                            
+
+                            notificationsArray.push({
+                                id: i++,
+                                channelId: `${key}Reminders`, // If you are using channels
+                                title: key,
+                                body: `Adzan ${key} sudah berkumandang, segera pergi ke masjid!`,
+                                schedule: {
+                                    on: {
+                                        hour: arrayTime[0],
+                                        minute: parseInt(arrayTime[1])
+                                    },
+                                    allowWhileIdle: true,
+                                },
+                            });
+                        }
+                        
+                    }
+
+                    await LocalNotifications.schedule({
+                        notifications: [
+                            {
+                                id: 1234,
+                                channelId: 'reminders', // If you are using channels
+                                title: 'My Title',
+                                body: 'My body',
+                                schedule: {
+                                    on: {
+                                        hour: 16,
+                                        minute: 20
+                                    },
+                                    allowWhileIdle: true,
+                                },
+                                extra: {
+                                    // Any random data you want to add
+                                },
+                            },
+                        ],
+                    })
+
                 })
                 .catch(( error ) => {
                     if (error.response.status >= 500) {

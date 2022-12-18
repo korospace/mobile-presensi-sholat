@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'mobile-presensi-sholat',
+  appName: 'Absensi Sholat SMP 3 JAKARTA',
   webDir: 'dist',
   bundledWebRuntime: false
 };
