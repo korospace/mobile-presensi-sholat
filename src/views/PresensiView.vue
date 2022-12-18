@@ -1,6 +1,6 @@
 <template>
     <!-- Container -->
-    <ion-content class="w-full flex-1">
+    <ion-content class="w-full flex-1 overflow-hidden">
       <section
         id="container_presensi"
         class="w-full h-full flex flex-col bg-neutral-200 overflow-hidden">
@@ -27,9 +27,13 @@
                 <!-- bg blur -->
                 <div
                   class="relative w-full h-full flex flex-col justify-start items-center text-neutral-200/90 bg-neutral-900/75 backdrop-blur-sm">
+                    <!-- region setting -->
+                    <router-link v-if="userdata==null" to="/regionsetting" class="absolute right-6 top-3 opacity-75 active:opacity-100 duration-300">
+                      <font-awesome-icon class="text-xl xs:text-2xl" :icon="faMapMarkedAlt"/>
+                    </router-link>
 
                     <!-- next pray time -->
-                    <p class="text-sm mt-8 mb-4">
+                    <p class="text-sm mt-12 mb-4">
                       waktu sholat berikutnya
                     </p>
                     <p class="text-5xl font-extrabold">
@@ -41,7 +45,7 @@
                       <p class="text-xs capitalize">
                         {{ region.lokasi.toLowerCase() }}
                       </p>
-                      <p class="text-md mt-1">
+                      <p class="text-sm font-bold mt-1">
                         {{ hijriah }}
                       </p>
                     </div>
@@ -97,7 +101,7 @@
                       class="absolute z-20 top-0 bottom-0 left-0 right-0">
                     </div>
                     <div
-                      v-if="objectIsEmpty(presSubuh)==true && privilege != null" 
+                      v-if="objectIsEmpty(presSubuh)==true" 
                       class="absolute z-20 top-0 bottom-0 left-0 right-0 flex justify-center items-center bg-neutral-400/80 text-neutral-900/80 italic">
                         absen belum tersedia
                     </div>
@@ -149,7 +153,7 @@
                       class="absolute z-20 top-0 bottom-0 left-0 right-0">
                     </div>
                     <div
-                      v-if="objectIsEmpty(presDzuhur)==true && privilege != null" 
+                      v-if="objectIsEmpty(presDzuhur)==true" 
                       class="absolute z-20 top-0 bottom-0 left-0 right-0 flex justify-center items-center bg-neutral-400/80 text-neutral-900/80 italic">
                         absen belum tersedia
                     </div>
@@ -201,7 +205,7 @@
                       class="absolute z-20 top-0 bottom-0 left-0 right-0">
                     </div>
                     <div
-                      v-if="objectIsEmpty(presAshar)==true && privilege != null" 
+                      v-if="objectIsEmpty(presAshar)==true" 
                       class="absolute z-20 top-0 bottom-0 left-0 right-0 flex justify-center items-center bg-neutral-400/80 text-neutral-900/80 italic">
                         absen belum tersedia
                     </div>
@@ -253,7 +257,7 @@
                       class="absolute z-20 top-0 bottom-0 left-0 right-0">
                     </div>
                     <div
-                      v-if="objectIsEmpty(presMagrib)==true && privilege != null" 
+                      v-if="objectIsEmpty(presMagrib)==true" 
                       class="absolute z-20 top-0 bottom-0 left-0 right-0 flex justify-center items-center bg-neutral-400/80 text-neutral-900/80 italic">
                         absen belum tersedia
                     </div>
@@ -305,7 +309,7 @@
                       class="absolute z-20 top-0 bottom-0 left-0 right-0">
                     </div>
                     <div
-                      v-if="objectIsEmpty(presIsya)==true && privilege != null" 
+                      v-if="objectIsEmpty(presIsya)==true" 
                       class="absolute z-20 top-0 bottom-0 left-0 right-0 flex justify-center items-center bg-neutral-400/80 text-neutral-900/80 italic">
                         absen belum tersedia
                     </div>
@@ -357,6 +361,8 @@ import { computed, defineComponent, onMounted } from 'vue';
 import { getLocalStorage } from '@/services/localstorage.service';
 import FormStatusSholat    from '@/components/FormStatusSholat.vue';
 import FormConfirmSholat   from '@/components/FormConfirmSholat.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faMapMarkedAlt }  from '@fortawesome/free-solid-svg-icons'
 import { useStore }  from 'vuex';
 import { useRouter } from 'vue-router';
 import Swal          from 'sweetalert2';
@@ -368,6 +374,7 @@ export default defineComponent({
     IonRefresher, 
     IonRefresherContent,
     IonContent,
+    FontAwesomeIcon,
   },
   setup() {
     // instance
@@ -376,6 +383,9 @@ export default defineComponent({
 
     let region = computed(() => {
       return getLocalStorage("userregion") ? getLocalStorage("userregion") : {};
+    });
+    let userdata = computed(() => {
+      return getLocalStorage("userdata")
     });
     let hijriah = computed(() => {
       return store.state.presensiapi.hijriah;
@@ -408,7 +418,9 @@ export default defineComponent({
       let jadwalSholat = store.state.presensiapi.jadwalSholat;
 
       if (jadwalSholat.date != "_ _:_ _") {
-        if (currentUnix < new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime()) {
+        if (currentUnix < new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime() 
+            || 
+            currentUnix >= new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime()) {
           nexttime = jadwalSholat.isya+":00";
         }
         if (currentUnix < new Date(`${jadwalSholat.date} ${jadwalSholat.magrib}`).getTime()) {
@@ -429,15 +441,23 @@ export default defineComponent({
 
     });
 
-    const objectIsEmpty = (obj) => {
-      for(var prop in obj) {
-        if(Object.prototype.hasOwnProperty.call(obj, prop)) {
+    const objectIsEmpty = computed(() => {
+
+      return (obj) => {
+        if (userdata.value != null) {
+          for(var prop in obj) {
+            if(Object.prototype.hasOwnProperty.call(obj, prop)) {
+              return false;
+            }
+          }
+
+          return JSON.stringify(obj) === JSON.stringify({});
+        }
+        else {
           return false;
         }
       }
-
-      return JSON.stringify(obj) === JSON.stringify({});
-    }
+    });
 
     const timeIsOpen = (date,time) => {
       let currentUnix = new Date().getTime();
@@ -512,6 +532,8 @@ export default defineComponent({
     })
 
     return {
+      faMapMarkedAlt,
+      userdata,
       nextPrayTime,
       region,
       hijriah,

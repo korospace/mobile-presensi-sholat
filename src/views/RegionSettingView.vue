@@ -125,7 +125,7 @@ export default defineComponent({
         } else {
           router.push("/profile");
         }
-      }, 3000);
+      }, 1000);
     }
 
     onMounted(() => {

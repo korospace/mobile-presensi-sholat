@@ -69,7 +69,7 @@ const loginCheck = async (to: any, from: any, next: any) => {
     const userData = getLocalStorage("userdata");
 
     if (userData != null) {
-        next({path: '/'});
+        router.push('/');
     }
 
     next();
@@ -79,7 +79,7 @@ const loginCheck = async (to: any, from: any, next: any) => {
 const regionCheck = async (to: any, from: any, next: any) => {
 
     if (getLocalStorage("userregion") == null) {
-        next({path: '/regionsetting'});
+        router.push('/regionsetting');
     }
 
     next();
