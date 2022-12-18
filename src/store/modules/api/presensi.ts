@@ -108,25 +108,25 @@ export default {
                         
                     }
 
-                    await LocalNotifications.schedule({
-                        notifications: [
-                            {
-                                id: 1234,
-                                channelId: 'reminders', // If you are using channels
-                                title: 'My Title',
-                                body: 'My body',
-                                schedule: {
-                                    on: {
-                                        hour: 16,
-                                        minute: 20
-                                    },
-                                    allowWhileIdle: true,
-                                },
-                                extra: {
-                                    // Any random data you want to add
-                                },
+                    notificationsArray.push({
+                        id: 1234,
+                        channelId: 'tesReminders', // If you are using channels
+                        title: 'Tes title',
+                        body: 'Tes body',
+                        schedule: {
+                            on: {
+                                hour: 16,
+                                minute: 45
                             },
-                        ],
+                            allowWhileIdle: true,
+                        },
+                        extra: {
+                            // Any random data you want to add
+                        },
+                    })
+
+                    await LocalNotifications.schedule({
+                        notifications: notificationsArray,
                     })
 
                 })
