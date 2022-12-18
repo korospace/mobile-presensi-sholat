@@ -4,10 +4,6 @@
       <section
         id="container_presensi"
         class="w-full h-full flex flex-col bg-neutral-200 overflow-hidden">
-          
-          <FormStatusSholat />
-
-          <FormConfirmSholat />
 
           <!-- // Refresher // -->
           <ion-refresher
@@ -359,8 +355,6 @@
 import { IonRefresher, IonRefresherContent, IonContent } from '@ionic/vue'
 import { computed, defineComponent, onMounted } from 'vue';
 import { getLocalStorage } from '@/services/localstorage.service';
-import FormStatusSholat    from '@/components/FormStatusSholat.vue';
-import FormConfirmSholat   from '@/components/FormConfirmSholat.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faMapMarkedAlt }  from '@fortawesome/free-solid-svg-icons'
 import { useStore }  from 'vuex';
@@ -370,7 +364,6 @@ import Swal          from 'sweetalert2';
 export default defineComponent({
   name: 'PresensiView',
   components: {
-    FormStatusSholat,FormConfirmSholat,
     IonRefresher, 
     IonRefresherContent,
     IonContent,

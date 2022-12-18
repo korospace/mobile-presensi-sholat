@@ -161,12 +161,22 @@ export default {
 
                     if (res.data.privilege == "parent") {
                         if (res.data.student.presensi==null) {
+                            commit("SET_SUBUH",{});
+                            commit("SET_DZUHUR",{});
+                            commit("SET_ASHAR",{});
+                            commit("SET_MAGRIB",{});
+                            commit("SET_ISYA",{});
                             return 0
                         }
 
                         presensi = res.data.student.presensi.detil_presensi;
                     } else {
                         if (res.data.presensi==null) {
+                            commit("SET_SUBUH",{});
+                            commit("SET_DZUHUR",{});
+                            commit("SET_ASHAR",{});
+                            commit("SET_MAGRIB",{});
+                            commit("SET_ISYA",{});
                             return 0
                         }
 
@@ -195,16 +205,6 @@ export default {
                             position: toast.POSITION.TOP_LEFT,
                         });
                     }
-                    // else if (error.response.status == 401) {
-                        
-                    //     toast.warn(error.response.data.message, {
-                    //         position: toast.POSITION.TOP_RIGHT,
-                    //     });
-
-                    //     removeLocalStorage("userdata");
-                    //     router.push('/login');
-
-                    // }
 
                     commit("SET_SUBUH",{});
                     commit("SET_DZUHUR",{});
