@@ -1,8 +1,9 @@
 <template>
     <!-- Container -->
+    <ion-content class="w-full flex-1 overflow-hidden">
     <section
       id="container_history"
-        class="w-full flex-1 flex flex-col overflow-hidden">
+        class="w-full h-full flex flex-col overflow-hidden">
 
           <!-- form date range -->
           <FormDateRange @filterOnChange="filterOnChange()" />
@@ -12,13 +13,13 @@
             class="relative z-20 w-full h-64 flex justify-center overflow-visible">
 
               <!-- // Refresher // -->
-              <!-- <ion-refresher
+              <ion-refresher
                 slot="fixed" pull-factor="0.5" pull-min="100" pull-max="200" 
                 @ionRefresh="doRefresh">
                   <ion-refresher-content>
                     
                   </ion-refresher-content>
-              </ion-refresher> -->
+              </ion-refresher>
               
               <div class="w-full h-full bg-masjid1 bg-no-repeat bg-cover overflow-hidden">
 
@@ -166,10 +167,11 @@
           </div>
 
     </section>
+    </ion-content>
 </template>
 
 <script>
-// import { IonRefresher, IonRefresherContent, IonContent } from '@ionic/vue'
+import { IonRefresher, IonRefresherContent, IonContent } from '@ionic/vue'
 import { computed, defineComponent, onMounted } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faCalendar }      from '@fortawesome/free-solid-svg-icons'
@@ -181,9 +183,9 @@ export default defineComponent({
   components: {
     FormDateRange,
     FontAwesomeIcon,
-    // IonRefresher, 
-    // IonRefresherContent,
-    // IonContent,
+    IonRefresher, 
+    IonRefresherContent,
+    IonContent,
   },
   setup() {
     const store = useStore();

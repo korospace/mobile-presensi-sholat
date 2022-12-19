@@ -5,20 +5,19 @@
         id="container_presensi"
         class="w-full h-full flex flex-col bg-neutral-200 overflow-hidden">
 
-          <!-- // Refresher // -->
-          <ion-refresher
-            slot="fixed" pull-factor="0.5" pull-min="100" pull-max="200" 
-            @ionRefresh="doRefresh">
-              <ion-refresher-content>
-                
-              </ion-refresher-content>
-          </ion-refresher>
-
           <!-- head -->
           <header
             class="relative z-20 w-full h-64 flex justify-center overflow-visible">
               
               <div class="w-full h-full bg-masjid1 bg-no-repeat bg-cover overflow-hidden">
+                <!-- // Refresher // -->
+                <ion-refresher
+                  slot="fixed" pull-factor="0.5" pull-min="100" pull-max="200" 
+                  @ionRefresh="doRefresh">
+                    <ion-refresher-content>
+                      
+                    </ion-refresher-content>
+                </ion-refresher>
 
                 <!-- bg blur -->
                 <div
