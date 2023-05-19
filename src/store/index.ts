@@ -12,7 +12,8 @@ import regionsettingapi from './modules/api/regionsetting'
 
 export default createStore({
   state: {
-    apiurl : "https://sholat.up.railway.app",
+    appVersion: 'v2',
+    apiurl : "https://api-presensi-sholat.up.railway.app",
     // apiurl : "http://127.0.0.1:8000",
   },
   getters: {

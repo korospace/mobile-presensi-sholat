@@ -46,7 +46,7 @@
                 <div 
                   class="absolute -bottom-14 flex justify-center items-center w-28 h-28 pb-1.5 bg-white rounded-full overflow-hidden shadow-md shadow-neutral-700/30">
                     <img 
-                      src="../assets/images/logo.webp" alt="logo" 
+                      src="../assets/images/logo.png" alt="logo" 
                       class="w-24 h-24">
                 </div>
 
@@ -91,6 +91,12 @@
                   class="w-full mt-12 py-4 bg-neutral-300 hover:bg-neutral-400 active:bg-neutral-400 text-neutral-600 text-center font-bold duration-300 rounded-full">
                     LOGIN
                 </button>
+
+                <router-link 
+                  to="/" 
+                  class="mt-4 text-sm text-neutral-900/80 underline underline-offset-2">
+                    halaman utama
+                </router-link>
 
                 <!-- error credential -->
                 <!-- <div v-if="errorCredential" class="w-full mt-20 px-6 text-center text-red-600/70 text-lg">

@@ -5,7 +5,7 @@
   </ion-app>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 import LoadingComponent    from "@/components/loading.vue";
 import { IonApp } from '@ionic/vue';

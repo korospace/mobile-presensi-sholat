@@ -1,9 +1,13 @@
 <template>
     <!-- Container -->
-    <ion-content class="w-full flex-1 overflow-hidden">
+    <ion-content class="w-full flex-1 overflow-hidden"> 
       <section
         id="container_presensi"
         class="w-full h-full flex flex-col bg-neutral-200 overflow-hidden">
+
+          <FormStatusSholat />
+
+          <FormConfirmSholat />
 
           <!-- head -->
           <header
@@ -68,11 +72,6 @@
                     </div>
                   </div>
 
-                  <!-- <div class="mt-4 flex items-center">
-                    <div class="w-4 h-4 bg-neutral-400"></div>
-                    <p class="ml-1.5">pengecekan</p>
-                  </div> -->
-
               </div>
 
           </header>
@@ -81,6 +80,10 @@
 
             <div
               class="w-full min-h-max max-h-full pt-12 pb-8 px-4 overflow-auto">
+
+                <!-- <p class="w-full text-center text-black mb-4" @click="testNotif">
+                  test notif
+                </p> -->
 
                 <div
                   :class="{
@@ -128,7 +131,7 @@
                           src="../assets/images/checkbox.svg" class="w-5 opacity-80">
                         <img 
                           v-if="presSubuh.status == null"
-                          :class="{'opacity-0':privilege=='parent','opacity-80':privilege=='student'||privilege==null}" 
+                          :class="{'opacity-80':privilege=='student'||privilege==null}" 
                           @click="updateSholat($event,presSubuh.uniqid,presSubuh.sholat)"
                           src="../assets/images/checkboxempty.svg" class="w-5">
                     </div>
@@ -180,7 +183,7 @@
                           src="../assets/images/checkbox.svg" class="w-5 opacity-80">
                         <img 
                           v-if="presDzuhur.status == null"
-                          :class="{'opacity-0':privilege=='parent','opacity-80':privilege=='student'||privilege==null}" 
+                          :class="{'opacity-80':privilege=='student'||privilege==null}" 
                           @click="updateSholat($event,presDzuhur.uniqid,presDzuhur.sholat)"
                           src="../assets/images/checkboxempty.svg" class="w-5">
                     </div>
@@ -232,7 +235,7 @@
                           src="../assets/images/checkbox.svg" class="w-5 opacity-80">
                         <img 
                           v-if="presAshar.status == null"
-                          :class="{'opacity-0':privilege=='parent','opacity-80':privilege=='student'||privilege==null}" 
+                          :class="{'opacity-80':privilege=='student'||privilege==null}" 
                           @click="updateSholat($event,presAshar.uniqid,presAshar.sholat)"
                           src="../assets/images/checkboxempty.svg" class="w-5">
                     </div>
@@ -284,7 +287,7 @@
                           src="../assets/images/checkbox.svg" class="w-5 opacity-80">
                         <img 
                           v-if="presMagrib.status == null"
-                          :class="{'opacity-0':privilege=='parent','opacity-80':privilege=='student'||privilege==null}" 
+                          :class="{'opacity-80':privilege=='student'||privilege==null}" 
                           @click="updateSholat($event,presMagrib.uniqid,presMagrib.sholat)"
                           src="../assets/images/checkboxempty.svg" class="w-5">
                     </div>
@@ -336,7 +339,7 @@
                           src="../assets/images/checkbox.svg" class="w-5 opacity-80">
                         <img 
                           v-if="presIsya.status == null"
-                          :class="{'opacity-0':privilege=='parent','opacity-80':privilege=='student'||privilege==null}" 
+                          :class="{'opacity-80':privilege=='student'||privilege==null}" 
                           @click="updateSholat($event,presIsya.uniqid,presIsya.sholat)"
                           src="../assets/images/checkboxempty.svg" class="w-5">
                     </div>
@@ -351,18 +354,26 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { IonRefresher, IonRefresherContent, IonContent } from '@ionic/vue'
 import { computed, defineComponent, onMounted } from 'vue';
+import FormStatusSholat       from '@/components/FormStatusSholat.vue';
+import FormConfirmSholat      from '@/components/FormConfirmSholat.vue';
+import { LocalNotifications } from '@capacitor/local-notifications'
 import { getLocalStorage } from '@/services/localstorage.service';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faMapMarkedAlt }  from '@fortawesome/free-solid-svg-icons'
 import { useStore }  from 'vuex';
 import { useRouter } from 'vue-router';
 import Swal          from 'sweetalert2';
+// import axios         from 'axios';
+// import { toast }     from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default defineComponent({
   name: 'PresensiView',
   components: {
+    FormStatusSholat,FormConfirmSholat,
     IonRefresher, 
     IonRefresherContent,
     IonContent,
@@ -405,14 +416,17 @@ export default defineComponent({
     });
 
     let nextPrayTime = computed(() => {
-      let nexttime     = "_ _:_ _";
+      let nexttime     = "_ _ : _ _";
       let currentUnix  = new Date().getTime();
       let jadwalSholat = store.state.presensiapi.jadwalSholat;
 
-      if (jadwalSholat.date != "_ _:_ _") {
-        if (currentUnix < new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime() 
-            || 
-            currentUnix >= new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime()) {
+      if (jadwalSholat.date != "_ _ : _ _") {
+        // if (currentUnix < new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime() 
+        //     || 
+        //     currentUnix >= new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime()) {
+        //   nexttime = jadwalSholat.isya+":00";
+        // }
+        if (currentUnix < new Date(`${jadwalSholat.date} ${jadwalSholat.isya}`).getTime()) {
           nexttime = jadwalSholat.isya+":00";
         }
         if (currentUnix < new Date(`${jadwalSholat.date} ${jadwalSholat.magrib}`).getTime()) {
@@ -485,7 +499,17 @@ export default defineComponent({
         })
       }
       else {
-        if (privilege.value == 'student') {
+        if (privilege.value == 'parent') {
+          Swal.fire({
+              icon: 'warning',
+              title: 'Tidak diizinkan',
+              text: 'absensi hanya diisi oleh siswa',
+              heightAuto: false
+          }).then(() => {
+              Swal.close()
+          })
+        } 
+        else {
           store.commit("presensiapi/SET_UNIQID",uniqid);
           store.commit("presensiapi/SET_SHOLATNAME",sholatName);
           store.commit("formStatusSholatUx/SET_SHOW_FORM",true);
@@ -506,6 +530,7 @@ export default defineComponent({
 
     const getAllData = () => {
       const userData = getLocalStorage("userdata");
+      store.dispatch("presensiapi/GET_APPVERSION");
       store.dispatch("presensiapi/GET_HIJRIAH");
       store.dispatch("presensiapi/GET_JADWAL");
 
@@ -514,12 +539,59 @@ export default defineComponent({
       } 
     }
 
+    const createAlarm = async () => {
+      // today
+      let currentUnixTime = new Date(new Date().getTime());
+      let currentDay   = currentUnixTime.toLocaleString("en-US",{day: "2-digit"});
+      let currentMonth = currentUnixTime.toLocaleString("en-US",{month: "2-digit"});
+      let currentYear  = currentUnixTime.toLocaleString("en-US",{year: "numeric"});
+
+      store.dispatch("presensiapi/CREATE_ALARM",{i:1,currentDay,currentMonth,currentYear});
+
+      // tomorrow
+      currentUnixTime = new Date(Date.now() + (24*60*60*1000));
+      currentDay   = currentUnixTime.toLocaleString("en-US",{day: "2-digit"});
+      currentMonth = currentUnixTime.toLocaleString("en-US",{month: "2-digit"});
+      currentYear  = currentUnixTime.toLocaleString("en-US",{year: "numeric"});
+
+      store.dispatch("presensiapi/CREATE_ALARM",{i:6,currentDay,currentMonth,currentYear});
+    }
+
+    const testNotif = async () => {
+      await LocalNotifications.requestPermissions();
+      await LocalNotifications.removeAllListeners();
+
+      for (let i = 0; i < 4; i++) {
+        LocalNotifications.schedule({
+          notifications: [
+            {
+              id: i,
+              title: 'Sample title '+i,
+              body: 'Sample body '+i,
+              actionTypeId: 'your_choice',
+              smallIcon:"res://ic_launcher_round",
+              schedule: {
+                at: new Date(Date.now() + (i*1000)), // Schedule this for 2 seconds from now
+                repeats: false
+              },
+            }
+          ]
+        })
+      }
+
+      LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+        console.log(`Notification ${notification.notification.title} was ${notification.actionId}ed.`);
+      });
+    }
+
     const doRefresh = (event) => {
       event.target.complete();
+      createAlarm();
       getAllData();
     }
 
     onMounted(() => {
+      createAlarm();
       getAllData();
     })
 
@@ -541,6 +613,7 @@ export default defineComponent({
       updateSholat,
       konfirmasiSholat,
       doRefresh,
+      testNotif,
     }
 
   }

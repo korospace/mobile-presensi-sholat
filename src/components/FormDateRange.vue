@@ -33,7 +33,7 @@
                           name="datestart"
                           v-model="dateStartVal"
                           :class="{'border-red-500':errors.datestart,'border-neutral-500':errors.datestart==null}"
-                          class="w-full z-10 mt-2 px-4 py-3 focus:outline-none bg-transparent border rounded" />
+                          class="w-full z-10 mt-2 px-4 py-3 text-neutral-800 focus:outline-none bg-transparent border rounded" />
 
                         <p class="w-full text-left mt-6 text-neutral-500 text-sm font-semibold">berakhir</p>
                         <Field
@@ -41,7 +41,7 @@
                           name="dateend"
                           v-model="dateEndVal"
                           :class="{'border-red-500':errors.dateend,'border-neutral-500':errors.dateend==null}"
-                          class="w-full z-10 mt-2 px-4 py-3 focus:outline-none bg-transparent border rounded" />
+                          class="w-full z-10 mt-2 px-4 py-3 text-neutral-800 focus:outline-none bg-transparent border rounded" />
                     
                     </main>
 

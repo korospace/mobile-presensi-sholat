@@ -3,7 +3,7 @@
     <ion-content class="w-full flex-1 overflow-hidden">
     <section
       id="container_history"
-        class="w-full h-full flex flex-col overflow-hidden">
+        class="w-full h-full flex flex-col bg-neutral-200 overflow-hidden">
 
           <!-- form date range -->
           <FormDateRange @filterOnChange="filterOnChange()" />

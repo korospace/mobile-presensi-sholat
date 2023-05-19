@@ -29,7 +29,7 @@
                           as="select"
                           name="status"
                           v-model="statusVal"
-                          class="w-full z-10 mt-2 px-4 py-3 text-neutral-800  focus:outline-none bg-transparent border border-neutral-500 rounded">
+                          class="w-full z-10 mt-2 px-4 py-3 text-neutral-800 focus:outline-none bg-transparent border border-neutral-500 rounded">
                             <option value="berjamaah">berjamaah</option>
                             <option value="munfarid">munfarid</option>
                             <option value="tidak sholat">tidak sholat</option>

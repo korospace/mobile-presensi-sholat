@@ -6,15 +6,10 @@
         
         <!-- Container Max-Width -->
         <div class="min-h-screen max-h-screen w-full max-w-lg flex flex-col m-auto overflow-hidden">
-          
-            <FormStatusSholat />
+                  
+            <router-view class="relative z-20"/>
 
-            <FormConfirmSholat />
-        
-            <router-view/>
-
-            <!-- tabs bar -->
-            <TabsBar />
+            <TabsBar class="relative z-10" />
 
         </div>
 
@@ -23,14 +18,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FormStatusSholat    from '@/components/FormStatusSholat.vue';
-import FormConfirmSholat   from '@/components/FormConfirmSholat.vue';
 import TabsBar             from '@/components/HomeTabsBar.vue'
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    FormStatusSholat,FormConfirmSholat,
     TabsBar
   }
 });

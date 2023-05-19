@@ -1,7 +1,9 @@
+/* eslint-disable */
 import { getLocalStorage, removeLocalStorage } from "@/services/localstorage.service";
 import { LocalNotifications } from '@capacitor/local-notifications'
 import axios     from 'axios';
 import router    from "@/router";
+import Swal      from 'sweetalert2';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
@@ -33,6 +35,34 @@ export default {
         statusGetter: (state: any) => state.status,
     },
     actions: {
+        GET_APPVERSION: function ({ commit,rootState }: any) {
+            axios
+                .get(`${rootState.apiurl}/api/v1/mobileversion`)
+                .then(( res ) => {
+
+                    const link        = res.data.link;
+                    const appVersion  = rootState.appVersion;
+                    const newVersion  = res.data.version;
+                    // const description = res.data.description;;
+                    
+                    if (appVersion != newVersion) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Versi Terbaru!',
+                            text: 'silahkan lakukan update aplikasi',
+                            // html: description,
+                            showDenyButton: false,
+                            confirmButtonText: 'update',
+                            heightAuto: false
+                        }).then(() => {
+                            window.open(link, '_blank');
+                        })
+                    }
+                })
+                .catch(( error ) => {
+                    console.log(error);
+                })
+        },
         GET_HIJRIAH: function ({ commit,rootState }: any) {
 
             commit("SET_HIJRIAH","_ _ _ _");
@@ -45,7 +75,7 @@ export default {
                 .get(`${rootState.apiurl}/api/v1/hijriyah/${currentDay}-${currentMonth}-${currentYear}`)
                 .then(( res ) => {
                     const data = res.data;
-                    commit("SET_HIJRIAH",`${data.hari}, ${data.tanggal_hijriyah} ${data.bulan_hijriyah} ${data.tahun_hijriyah}`);
+                    commit("SET_HIJRIAH",`${data.hari != null ? data.hari : '_ _'}, ${data.tanggal_hijriyah != null ? data.tanggal_hijriyah : '_ _'} ${data.bulan_hijriyah != null ? data.bulan_hijriyah : '_ _'} ${data.tahun_hijriyah != null ? data.tahun_hijriyah : '_ _'}`);
                 })
                 .catch(( error ) => {
                     if (error.response.status >= 500) {
@@ -81,53 +111,6 @@ export default {
                     const jadwal = res.data.data.jadwal;
                     
                     commit("SET_JADWAL",jadwal);
-                    LocalNotifications.removeAllListeners();
-
-                    let i = 1;
-                    const notificationsArray = [];
-
-                    for (const key in jadwal) {
-
-                        if (['subuh','dzuhur','ashar','maghrib','isya'].includes(key)) {
-                            const arrayTime = jadwal[key].split(':');                            
-
-                            notificationsArray.push({
-                                id: i++,
-                                channelId: `${key}Reminders`, // If you are using channels
-                                title: key,
-                                body: `Adzan ${key} sudah berkumandang, segera pergi ke masjid!`,
-                                schedule: {
-                                    on: {
-                                        hour: arrayTime[0],
-                                        minute: parseInt(arrayTime[1])
-                                    },
-                                    allowWhileIdle: true,
-                                },
-                            });
-                        }
-                        
-                    }
-
-                    notificationsArray.push({
-                        id: 1234,
-                        channelId: 'tesReminders', // If you are using channels
-                        title: 'Tes title',
-                        body: 'Tes body',
-                        schedule: {
-                            on: {
-                                hour: 16,
-                                minute: 45
-                            },
-                            allowWhileIdle: true,
-                        },
-                        extra: {
-                            // Any random data you want to add
-                        },
-                    })
-
-                    await LocalNotifications.schedule({
-                        notifications: notificationsArray,
-                    })
 
                 })
                 .catch(( error ) => {
@@ -147,6 +130,83 @@ export default {
                     });
                 })
 
+        },
+        CREATE_ALARM: function ({ commit,rootState }: any,data: any) {
+            const userregion = getLocalStorage("userregion");
+
+            axios
+                .get(`https://api.myquran.com/v1/sholat/jadwal/${userregion.id}/${data.currentYear}/${data.currentMonth}/${data.currentDay}`)
+                .then(async ( res ) => {
+                    let i = data.i;
+                    const jadwal = res.data.data.jadwal;
+                    const date   = jadwal.date;
+
+                    await LocalNotifications.requestPermissions();
+                    await LocalNotifications.removeAllListeners();
+
+                    for (const key in jadwal) {
+                    
+                        if (['subuh','dzuhur','ashar','maghrib','isya'].includes(key)) {
+                            const newDate= new Date(new Date(`${date} ${jadwal[key]}`).getTime() - (60*1000));
+                            
+                            LocalNotifications.schedule({
+                                notifications: [
+                                {
+                                    id: i++,
+                                    title: `Sholat ${key}`,
+                                    body: `Sudah masuk waktu ${key}, segera tunaikan kewajiban!`,
+                                    smallIcon:"res://ic_launcher_round.png",
+                                    actionTypeId: 'your_choice',
+                                    schedule: {
+                                        at: newDate,
+                                        // at: new Date(Date.now() + (i*1000)),
+                                        repeats: false
+                                    },
+                                }
+                                ]
+                            })
+                        }
+                        
+                    }
+
+                    if (getLocalStorage('userdata') != null) {
+                        if (getLocalStorage('userdata').privilege == 'parent') {
+                            const currentUnixTime = new Date(Date.now());
+                            const currentDay   = currentUnixTime.toLocaleString("en-US",{day: "2-digit"});
+                            const currentMonth = currentUnixTime.toLocaleString("en-US",{month: "2-digit"});
+                            const currentYear  = currentUnixTime.toLocaleString("en-US",{year: "numeric"});
+
+                            LocalNotifications.schedule({
+                                notifications: [
+                                    {
+                                        id: 9999,
+                                        title: 'Konfirmasi Sholat',
+                                        body: 'Bapak/Ibu sudah waktunya periksa sholat anak anda',
+                                        smallIcon:"res://ic_launcher_round.png",
+                                        actionTypeId: 'your_choice',
+                                        schedule: {
+                                            at: new Date(new Date(`${currentYear}-${currentMonth}-${currentDay} 19:58`).getTime()),
+                                            // at: new Date(Date.now() + (i*7000)),
+                                            repeats: false
+                                        },
+                                    }
+                                ]
+                            })
+                        }
+                    }
+
+                    LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                        console.log(`Notification ${notification.notification.title} was ${notification.actionId}ed.`);
+                    });
+
+                })
+                .catch(( error ) => {
+                    if (error.response.status >= 500) {
+                        toast.error("terjadi kesalahan pada server !", {
+                            position: toast.POSITION.TOP_LEFT,
+                        });
+                    }
+                })
         },
         GET_PRESENSI: function ({ commit,rootState }: any) {
 
@@ -199,7 +259,6 @@ export default {
 
                 })
                 .catch(( error ) => {
-                    
                     if (error.response.status >= 500) {
                         toast.error("terjadi kesalahan pada server, refresh halaman !", {
                             position: toast.POSITION.TOP_LEFT,
@@ -234,6 +293,7 @@ export default {
                         position: toast.POSITION.TOP_RIGHT,
                     });
 
+                    commit("formKonfirmSholatUx/SET_SHOW_FORM",false,{root:true});
                     dispatch("GET_PRESENSI");
 
                 })
@@ -290,6 +350,7 @@ export default {
                         position: toast.POSITION.TOP_RIGHT,
                     });
 
+                    commit("formStatusSholatUx/SET_SHOW_FORM",false,{root:true});
                     dispatch("GET_PRESENSI");
 
                 })

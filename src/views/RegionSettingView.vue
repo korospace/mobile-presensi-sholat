@@ -9,7 +9,7 @@
 
             <div 
               class="relative flex justify-center items-center w-full pt-6 text-neutral-700/90">
-                <router-link v-if="userdata!=null" to="/profile" class="absolute left-0 top-7">
+                <router-link :to="userdata!=null ? '/profile' : '/'" class="absolute left-0 top-7">
                   <font-awesome-icon class="text-2xl xs:text-3xl" :icon="faAngleLeft"/>
                 </router-link>
                 <div class="text-center text-xl xs:text-2xl">Setting Kota</div>
@@ -28,6 +28,7 @@
 
             <input 
               @keyup="doSearch"
+              id="search-input"
               type="text" autocomplete="off" placeholder="cari nama kota"
               class="w-full relative z-10 mt-12 py-1 text-lg xs:text-xl text-neutral-700 bg-transparent focus:outline-none border-b-2 border-neutral-500">
 
@@ -129,6 +130,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      document.getElementById("search-input")?.focus();
       store.dispatch("regionsettingapi/GET_CITY")
     })
 
